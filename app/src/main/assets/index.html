@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>HyperStorm Studio (HS)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-black">
+  <div id="app-root">
+    <!-- Page 1: Email Sign-In & Onboarding -->
+    <section id="page-signin" class="page active">
+      <div class="signin-wrap">
+        <div class="signin-card panel">
+          <div class="brand-lockup center">
+            <img src="hs_logo.jpg" alt="HyperStorm Studio HS Logo" class="hs-logo hs-logo-lg" />
+            <div class="brand-title">HYPERSTORM STUDIO</div>
+            <div class="brand-sub">HS MOBILE DAW · ANDROID 7+ EDITION</div>
+          </div>
+
+          <form id="signin-form" class="stack-md" novalidate>
+            <div class="field">
+              <label for="signin-email" class="label">PRODUCER EMAIL</label>
+              <input id="signin-email" type="email" class="input" placeholder="producer@studio.io" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="signin-name" class="label">DISPLAY NAME (OPTIONAL)</label>
+              <input id="signin-name" type="text" class="input" placeholder="StormMaker" maxlength="32" />
+            </div>
+            <div id="signin-error" class="error-text hidden"></div>
+            <button type="submit" id="btn-signin-submit" class="btn btn-primary btn-block">
+              SIGN IN / CREATE STUDIO ACCOUNT
+            </button>
+          </form>
+
+          <div class="divider-row"><span>OR</span></div>
+
+          <button type="button" id="btn-continue-offline" class="btn btn-outline btn-block">
+            CONTINUE OFFLINE (LOCAL STORAGE)
+          </button>
+
+          <div class="signin-footer">
+            <span>ZERO-BACKEND · .HYPER ENGINE · MONOCHROME UI</span>
+            <button type="button" id="btn-signin-theme" class="btn-chip">THEME: BLACK</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 2: Home Dashboard -->
+    <section id="page-home" class="page">
+      <header class="topbar">
+        <div class="topbar-left">
+          <img src="hs_logo.jpg" alt="HS Logo" class="hs-logo hs-logo-sm" />
+          <div class="topbar-titles">
+            <div class="topbar-name">HYPERSTORM STUDIO</div>
+            <div class="topbar-sub">HS HOME HUB · .HYPER WORKSPACE</div>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" id="btn-home-theme" class="btn-icon-text" aria-label="Toggle Theme">LIGHT</button>
+          <button type="button" id="btn-home-settings" class="btn-icon-text" aria-label="Open DAW Settings">SETTINGS</button>
+        </div>
+      </header>
+
+      <main class="home-scroll">
+        <!-- User Profile Card -->
+        <section class="panel card-pad" id="profile-card">
+          <div class="profile-row">
+            <div class="avatar-box" id="profile-initials">HS</div>
+            <div class="profile-meta">
+              <div class="profile-name-row">
+                <span id="profile-display-name" class="profile-name">Producer</span>
+                <button type="button" id="btn-edit-name" class="btn-chip">EDIT</button>
+              </div>
+              <div id="profile-email" class="muted-mono">offline@hyperstorm.local</div>
+            </div>
+            <div class="stat-pill">
+              <div class="stat-num" id="profile-project-count">2</div>
+              <div class="stat-lbl">.HYPER</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- My Projects (.hyper) -->
+        <section class="panel card-pad">
+          <div class="section-head">
+            <div>
+              <div class="section-title">MY PROJECTS (.HYPER)</div>
+              <div class="muted-small">Zero-backend offline JSON project library</div>
+            </div>
+            <div class="btn-row">
+              <button type="button" id="btn-new-project" class="btn btn-primary btn-sm">+ NEW PROJECT</button>
+              <button type="button" id="btn-import-hyper-home" class="btn btn-outline btn-sm">IMPORT .HYPER</button>
+            </div>
+          </div>
+          <div id="projects-list" class="projects-grid"></div>
+        </section>
+
+        <!-- Collaborations & Collaborators -->
+        <section class="panel card-pad">
+          <div class="section-head">
+            <div>
+              <div class="section-title">COLLABORATIONS &amp; COLLABORATORS</div>
+              <div class="muted-small">Shared .hyper sessions &amp; studio roster</div>
+            </div>
+            <button type="button" id="btn-open-invite" class="btn btn-outline btn-sm">+ INVITE BY EMAIL</button>
+          </div>
+
+          <div class="sub-label">SHARED .HYPER SESSIONS</div>
+          <div id="shared-projects-list" class="shared-list"></div>
+
+          <div class="sub-label mt-md">STUDIO COLLABORATORS</div>
+          <div id="collaborators-list" class="collab-list"></div>
+        </section>
+      </main>
+    </section>
+
+    <!-- Page 3: Studio Workspace -->
+    <section id="page-studio" class="page">
+      <!-- Studio Top Header + Global Transport -->
+      <header class="studio-header">
+        <div class="studio-brand-row">
+          <div class="studio-brand-left">
+            <button type="button" id="btn-studio-home" class="btn-chip" title="Back to Home Hub">HOME</button>
+            <img src="hs_logo.jpg" alt="HS Logo" class="hs-logo hs-logo-xs" />
+            <div class="studio-project-info">
+              <div id="studio-project-title" class="studio-title">Midnight Monochrome.hyper</div>
+              <div id="studio-timecode" class="muted-mono">001:1:01 · PAT</div>
+            </div>
+          </div>
+          <div class="studio-brand-right">
+            <canvas id="spectrum-canvas" width="110" height="32" class="spectrum-canvas" title="5-Band Monochrome Spectrum Analyzer"></canvas>
+            <button type="button" id="btn-studio-settings" class="btn-chip">SET</button>
+          </div>
+        </div>
+
+        <div class="transport-row">
+          <button type="button" id="btn-play" class="t-btn t-btn-play" aria-label="Play or Pause">PLAY</button>
+          <button type="button" id="btn-stop" class="t-btn" aria-label="Stop">STOP</button>
+          <button type="button" id="btn-record" class="t-btn" aria-label="Record Arm">REC</button>
+          <button type="button" id="btn-mode" class="t-btn" aria-label="Toggle Pattern or Song Mode">PAT</button>
+
+          <div class="bpm-box">
+            <button type="button" id="btn-bpm-dec" class="bpm-step" aria-label="Decrease BPM">-</button>
+            <span id="bpm-val" class="bpm-num">128</span>
+            <button type="button" id="btn-bpm-inc" class="bpm-step" aria-label="Increase BPM">+</button>
+          </div>
+
+          <button type="button" id="btn-metro" class="t-btn" aria-label="Metronome">MET</button>
+          <button type="button" id="btn-undo" class="t-btn" aria-label="Undo">UNDO</button>
+          <button type="button" id="btn-save-hyper" class="t-btn t-btn-strong" aria-label="Save .hyper">SAVE</button>
+        </div>
+      </header>
+
+      <!-- Active Workspace Panel Container -->
+      <main id="studio-viewport" class="studio-viewport">
+        <!-- 1. Playlist (Arrangement) -->
+        <div id="ws-playlist" class="workspace active">
+          <div class="ws-toolbar">
+            <div class="ws-title">PLAYLIST · ARRANGEMENT</div>
+            <div class="btn-row">
+              <span class="muted-mono" id="playlist-brush-label">BRUSH: PAT 1</span>
+              <button type="button" id="btn-playlist-clear" class="btn-chip">CLEAR</button>
+            </div>
+          </div>
+          <div class="pattern-pills" id="playlist-pattern-pills"></div>
+          <div class="timeline-scroll" id="playlist-timeline-wrap">
+            <div id="playlist-grid" class="playlist-grid"></div>
+          </div>
+          <div class="ws-hint">Tap bar numbers to scrub timeline · Tap grid cells to place/remove pattern blocks across Intro, Verse, Chorus, Outro.</div>
+        </div>
+
+        <!-- 2. Channel Rack (16-Step Sequencer) -->
+        <div id="ws-rack" class="workspace">
+          <div class="ws-toolbar">
+            <div class="ws-title">CHANNEL RACK · 16-STEP</div>
+            <div class="swing-wrap">
+              <span class="muted-mono" id="swing-label">SWING 0%</span>
+              <input type="range" id="rack-swing" min="0" max="50" value="0" class="mono-slider" />
+            </div>
+          </div>
+          <div class="pattern-pills" id="rack-pattern-pills"></div>
+          <div id="rack-channels-list" class="rack-list"></div>
+        </div>
+
+        <!-- 3. Piano Roll -->
+        <div id="ws-piano" class="workspace">
+          <div class="ws-toolbar">
+            <div class="ws-title">PIANO ROLL</div>
+            <div class="btn-row">
+              <select id="piano-channel-select" class="mono-select"></select>
+              <select id="piano-scale-select" class="mono-select">
+                <option value="chromatic">Chromatic</option>
+                <option value="minor" selected>Minor Scale</option>
+                <option value="major">Major Scale</option>
+                <option value="pentatonic">Pentatonic</option>
+              </select>
+            </div>
+          </div>
+          <div class="piano-actions-bar">
+            <button type="button" id="btn-piano-lock" class="btn-chip active">SCALE LOCK: ON</button>
+            <button type="button" id="btn-piano-strum" class="btn-chip">STRUM</button>
+            <button type="button" id="btn-piano-humanize" class="btn-chip">HUMANIZE</button>
+            <button type="button" id="btn-piano-arp" class="btn-chip">ARPEGGIATOR</button>
+            <button type="button" id="btn-piano-clear" class="btn-chip">CLEAR</button>
+          </div>
+          <div class="piano-scroll" id="piano-grid-wrap">
+            <div id="piano-grid" class="piano-grid"></div>
+          </div>
+          <div class="velocity-strip" id="piano-velocity-strip">
+            <span class="muted-mono">NOTE VELOCITY</span>
+            <input type="range" id="piano-velocity-slider" min="20" max="100" value="85" class="mono-slider" />
+            <span id="piano-velocity-val" class="muted-mono">85%</span>
+          </div>
+        </div>
+
+        <!-- 4. MPC Touch Pads -->
+        <div id="ws-mpc" class="workspace">
+          <div class="ws-toolbar">
+            <div class="ws-title">MPC TOUCH PADS · 4×4</div>
+            <div class="muted-mono" id="mpc-last-hit">READY · TOUCH-START ZERO-LATENCY</div>
+          </div>
+          <div id="mpc-grid" class="mpc-grid"></div>
+        </div>
+
+        <!-- 5. Mixer Board -->
+        <div id="ws-mixer" class="workspace">
+          <div class="ws-toolbar">
+            <div class="ws-title">MIXER BOARD</div>
+            <div class="muted-mono">MONOCHROME GAIN STAGING</div>
+          </div>
+          <div id="mixer-strips" class="mixer-strips"></div>
+        </div>
+
+        <!-- 6. Browser & AI Stem Splitter -->
+        <div id="ws-browser" class="workspace">
+          <div class="ws-toolbar">
+            <div class="ws-title">BROWSER &amp; AI STEM SPLITTER</div>
+          </div>
+          <div class="browser-scroll">
+            <div class="panel card-pad mb-md">
+              <div class="sub-label">OFFLINE AUDIO &amp; .HYPER EXPORT</div>
+              <div class="btn-row wrap-row mt-sm">
+                <button type="button" id="btn-bounce-wav16" class="btn btn-primary btn-sm">BOUNCE 16-BIT .WAV</button>
+                <button type="button" id="btn-bounce-wav24" class="btn btn-outline btn-sm">BOUNCE 24-BIT .WAV</button>
+                <button type="button" id="btn-export-hyper" class="btn btn-outline btn-sm">EXPORT .HYPER</button>
+                <button type="button" id="btn-import-hyper-studio" class="btn btn-outline btn-sm">IMPORT .HYPER</button>
+              </div>
+              <div id="export-status" class="muted-mono mt-sm"></div>
+            </div>
+
+            <div class="panel card-pad mb-md">
+              <div class="sub-label">SYNTH PRESETS (APPLIES TO SELECTED SYNTH)</div>
+              <div id="browser-synth-presets" class="preset-list mt-sm"></div>
+            </div>
+
+            <div class="panel card-pad mb-md">
+              <div class="sub-label">DRUM KIT VOICINGS</div>
+              <div id="browser-drum-kits" class="preset-list mt-sm"></div>
+            </div>
+
+            <div class="panel card-pad">
+              <div class="section-head">
+                <div>
+                  <div class="sub-label">STEM SPLITTER TOOL (.MP3 / .WAV)</div>
+                  <div class="muted-small">Frequency-band isolation: Vocals, Drums, Bass, Instruments</div>
+                </div>
+                <button type="button" id="btn-upload-stem-audio" class="btn btn-primary btn-sm">UPLOAD AUDIO</button>
+              </div>
+              <div id="stem-source-status" class="muted-mono mt-sm">No audio file loaded. Upload .wav or .mp3 to isolate 4 stems.</div>
+              <div id="stem-tracks-list" class="stem-list mt-sm"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Bottom Workspace Tab Switcher -->
+      <nav class="studio-tabs" aria-label="Studio Workspaces">
+        <button type="button" class="tab-btn active" data-ws="ws-playlist">PLAYLIST</button>
+        <button type="button" class="tab-btn" data-ws="ws-rack">RACK</button>
+        <button type="button" class="tab-btn" data-ws="ws-piano">PIANO</button>
+        <button type="button" class="tab-btn" data-ws="ws-mpc">MPC</button>
+        <button type="button" class="tab-btn" data-ws="ws-mixer">MIXER</button>
+        <button type="button" class="tab-btn" data-ws="ws-browser">STEMS</button>
+      </nav>
+    </section>
+
+    <!-- Modal: Synth ADSR & Filter Editor -->
+    <div id="modal-synth" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card panel">
+        <div class="modal-head">
+          <div class="section-title" id="synth-modal-title">SYNTH ENGINE</div>
+          <button type="button" class="btn-chip" data-close="modal-synth">CLOSE</button>
+        </div>
+        <div class="stack-sm mt-sm">
+          <div class="sub-label">WAVEFORM</div>
+          <div class="btn-row" id="synth-waveform-row">
+            <button type="button" class="btn-chip" data-wf="sine">SINE</button>
+            <button type="button" class="btn-chip" data-wf="square">SQUARE</button>
+            <button type="button" class="btn-chip" data-wf="sawtooth">SAW</button>
+            <button type="button" class="btn-chip" data-wf="triangle">TRI</button>
+          </div>
+          <div class="sub-label mt-sm">BIQUAD FILTER</div>
+          <div class="btn-row">
+            <button type="button" class="btn-chip" id="btn-filter-type">TYPE: LOWPASS</button>
+          </div>
+          <div class="slider-row"><span>CUTOFF</span><input type="range" id="synth-cutoff" min="150" max="14000" value="3800" class="mono-slider" /><span id="synth-cutoff-val" class="muted-mono">3800Hz</span></div>
+          <div class="sub-label mt-sm">ADSR ENVELOPE</div>
+          <div class="slider-row"><span>ATTACK</span><input type="range" id="synth-attack" min="2" max="400" value="10" class="mono-slider" /><span id="synth-attack-val" class="muted-mono">10ms</span></div>
+          <div class="slider-row"><span>DECAY</span><input type="range" id="synth-decay" min="20" max="1000" value="180" class="mono-slider" /><span id="synth-decay-val" class="muted-mono">180ms</span></div>
+          <div class="slider-row"><span>SUSTAIN</span><input type="range" id="synth-sustain" min="0" max="100" value="65" class="mono-slider" /><span id="synth-sustain-val" class="muted-mono">65%</span></div>
+          <div class="slider-row"><span>RELEASE</span><input type="range" id="synth-release" min="20" max="1200" value="220" class="mono-slider" /><span id="synth-release-val" class="muted-mono">220ms</span></div>
+          <button type="button" id="btn-synth-audition" class="btn btn-primary btn-block mt-sm">TEST NOTE (C4)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Invite Collaborator by Email -->
+    <div id="modal-invite" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card panel">
+        <div class="modal-head">
+          <div class="section-title">INVITE COLLABORATOR</div>
+          <button type="button" class="btn-chip" data-close="modal-invite">CLOSE</button>
+        </div>
+        <form id="invite-form" class="stack-md mt-sm">
+          <div class="field">
+            <label for="invite-email" class="label">COLLABORATOR EMAIL</label>
+            <input id="invite-email" type="email" class="input" placeholder="beatmaker@domain.com" required />
+          </div>
+          <div class="field">
+            <label for="invite-role" class="label">STUDIO ROLE</label>
+            <select id="invite-role" class="input">
+              <option value="Producer">Producer</option>
+              <option value="Mix Engineer">Mix Engineer</option>
+              <option value="Vocalist">Vocalist</option>
+              <option value="Sound Designer">Sound Designer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="invite-project" class="label">SHARE .HYPER PROJECT</label>
+            <select id="invite-project" class="input"></select>
+          </div>
+          <div id="invite-error" class="error-text hidden"></div>
+          <button type="submit" class="btn btn-primary btn-block">SEND INVITE &amp; SHARE .HYPER</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: Comprehensive DAW Settings -->
+    <div id="modal-settings" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card panel">
+        <div class="modal-head">
+          <div class="section-title">HS DAW SETTINGS</div>
+          <button type="button" class="btn-chip" data-close="modal-settings">CLOSE</button>
+        </div>
+        <div class="stack-md mt-sm">
+          <div class="sub-label">THEME</div>
+          <div class="btn-row">
+            <button type="button" id="set-theme-black" class="btn btn-outline btn-sm flex1">PURE BLACK</button>
+            <button type="button" id="set-theme-light" class="btn btn-outline btn-sm flex1">CRISP LIGHT</button>
+          </div>
+
+          <div class="sub-label">PERFORMANCE &amp; AUDIO</div>
+          <div class="field">
+            <label for="set-latency" class="label">BUFFER LATENCY PRESET</label>
+            <select id="set-latency" class="input">
+              <option value="low">Low Latency (Interactive)</option>
+              <option value="balanced">Balanced (Default)</option>
+              <option value="android7">Android 7 Safe Mode (Anti-Glitch)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="set-samplerate" class="label">SAMPLE RATE</label>
+            <select id="set-samplerate" class="input">
+              <option value="44100">44100 Hz (Standard)</option>
+              <option value="48000">48000 Hz (Studio)</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="label">LOW-RAM MODE</div>
+              <div class="muted-small">Disables 30fps visualizer &amp; reduces animation frames</div>
+            </div>
+            <button type="button" id="set-low-ram" class="btn-chip">OFF</button>
+          </div>
+
+          <div class="sub-label">ACCOUNT &amp; STORAGE</div>
+          <div class="field">
+            <label for="set-profile-name" class="label">PRODUCER DISPLAY NAME</label>
+            <div class="btn-row">
+              <input id="set-profile-name" type="text" class="input flex1" maxlength="32" />
+              <button type="button" id="btn-save-profile-name" class="btn btn-primary btn-sm">SAVE</button>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="btn-clear-cache" class="btn btn-outline btn-sm flex1">CLEAR CACHED DATA</button>
+            <button type="button" id="btn-sign-out" class="btn btn-outline btn-sm flex1">SIGN OUT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden File Inputs for Browser Fallback -->
+    <input type="file" id="file-import-hyper" accept=".hyper,.json,application/json" class="hidden" />
+    <input type="file" id="file-upload-audio" accept=".wav,.mp3,audio/*" class="hidden" />
+
+    <!-- Toast Banner -->
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script src="audio-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

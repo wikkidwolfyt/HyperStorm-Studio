@@ -1,0 +1,6 @@
+{
+  "name": "HyperStorm Studio",
+  "description": "Ultra-lightweight monochrome mobile-first Digital Audio Workstation (HS) built for Android 7.0+ WebViews with Web Audio API synth/drums, 5-band Canvas 2D spectrum analyzer, .hyper project persistence, collaboration hub, and offline .wav export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
